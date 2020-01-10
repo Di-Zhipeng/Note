@@ -93,7 +93,7 @@ $$
 
 #### 网络流问题
 
-​	
+
 
 ####最小生成树
 
@@ -200,9 +200,53 @@ $F(i)=\pm i^2$的含义是每次探测先加再减
 
 ![image-20200107231233167](D:\Note\DS.assets\image-20200107231233167.png)
 
-不想写了，写了几遍都看错，看成写判断平衡二叉树，艹。
+**AC代码**
 
-思路应该挺简单的。
+~~~c
+#define MAXN 1024
+typedef struct Stack {
+    int arr[MAXN];
+    int sp;
+} Stack;
+Stack S;
+int Height = -1;
+
+void Push(int X) {
+    S.arr[++S.sp] = X;
+}
+
+
+int Length() {
+    return S.sp + 1;
+}
+
+void inOrderT(BinTree T, int cur_h) {
+    if (T != NULL) {
+        if (cur_h > Height) {
+            Height = cur_h;
+        }
+        inOrderT(T->Left, cur_h + 1);
+        Push(T->Key);
+        inOrderT(T->Right, cur_h + 1);
+    }
+}
+
+int Check() {
+    int L = Length();
+    for (int i = 1; i < L; ++i)
+        if (S.arr[i] < S.arr[i - 1])
+            return 0;
+    return 1;
+}
+
+int CheckBST(BinTree T, int K) {
+    S.sp = -1;
+    inOrderT(T, 1);
+    int L = Length();
+    return Check() ? S.arr[K-1] : -1 * Height;
+}
+
+~~~
 
 **2016-2017秋冬期末**
 
